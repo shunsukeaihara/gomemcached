@@ -61,16 +61,20 @@ func NewServer(addr string) *Server {
 // on incoming connections. Accepted connections are configured to enable TCP keep-alives.
 func (s *Server) Start() error {
 	var err error
-	if s.addrt == "" {
+	if s.addr == "" {
 		s.addr = ":0"
 	}
 	s.ln, err = net.Listen("tcp", s.addr)
 	if err != nil {
 		return err
 	}
-	s.addr = s.ln.Addr()
+	s.addr = s.ln.Addr().String()
 	go s.Serve(s.ln)
 	return nil
+}
+
+func (s *Server) Addr() string {
+	return s.addr
 }
 
 // Serve accepts incoming connections on the Listener ln, creating a new service goroutine for each.
